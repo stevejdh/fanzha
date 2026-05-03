@@ -1317,9 +1317,9 @@
                 };
                 this.scriptData = {
                     introScenes: [
-                        { emoji: '🌅🏠', bgClass: 'scene-morning', text: '周一早上总是最慌的。妈妈在厨房催着快点吃早饭，说今天升旗别迟到。你背着书包，嘴里咬着半个包子，顺手拿起茶几上的手机。' },
-                        { emoji: '📱💬', bgClass: 'scene-group', text: '班级群里有一条@所有人的消息。头像和昵称都是班主任王老师——那张白色衬衫的照片你太熟悉了。消息说这学期要统一收资料费。' },
-                        { emoji: '💳🤔', bgClass: 'scene-pay', text: '下面已经有几个家长回复了"收到，已转"。妈妈正在厨房忙得不可开交。你想着，要不就帮妈妈弄了吧？反正88块钱也不多。' }
+                        { emoji: '🌅🏠', bgClass: 'scene-morning', text: '周一早上。妈妈在厨房催着快点吃早饭，说今天别迟到。你嘴里咬着半个包子，顺手拿起茶几上的手机，看到一条未读消息。' },
+                        { emoji: '📱💬', bgClass: 'scene-group', text: '班级群里有一条@所有人的消息。头像和昵称都是班主任王老师——那张白色衬衫的照片你太熟悉了。要统一收资料费。' },
+                        { emoji: '💳🤔', bgClass: 'scene-pay', text: '下面已经有几个家长已经开始接龙。妈妈正忙得不可开交。你想着，要不就帮妈妈弄了吧' }
                     ],
                     stages: [
                         { id:1, chatType:'group', sender:'XX班家长群', messages:[
@@ -1335,15 +1335,15 @@
                         ]},
                         { id:'1_reply_done', chatType:'group', sender:'XX班家长群', messages:[], autoNext:2, autoNextDelay:2000 },
                         { id:2, chatType:'private', sender:'王老师', messages:[
-                            { from:'other', senderName:'王老师', content:'XX妈妈，刚才看群里还有几个家长没回复。这个费用今天要统一收齐交给学校，麻烦抽空处理一下。', delay:1200 }
+                            { from:'other', senderName:'王老师', content:'还有几个家长没回复。这个费用今天要统一收齐交给学校，麻烦抽空处理一下。', delay:1200 }
                         ], options:[
-                            { id:'2a', text:'好的老师，我马上处理', nextStage:'3_pay' },
-                            { id:'2b', text:'老师，能不能晚点交？', nextStage:'2_urge' }
+                            { id:'2a', text:'好的老师', nextStage:'3_pay' },
+                            { id:'2b', text:'正在处理 稍等', nextStage:'2_urge' }
                         ]},
                         { id:'2_urge', chatType:'private', sender:'王老师', messages:[
-                            { from:'other', senderName:'王老师', content:'这个费用学校要求今天收齐，我也是按规定办事。理解一下哈。就差几个同学了，麻烦尽快。', delay:1500 }
+                            { from:'other', senderName:'王老师', content:'这个费用学校要求今天收齐，就差几个同学了，麻烦尽快缴费接龙。', delay:1500 }
                         ], options:[
-                            { id:'2c', text:'好的老师，我马上处理', nextStage:'3_pay' }
+                            { id:'2c', text:'好的老师 马上', nextStage:'3_pay' }
                         ]},
                         { id:'3_pay', chatType:'private', sender:'王老师', messages:[], showPayOverlay:true }
                     ]
@@ -1434,7 +1434,7 @@
             confirmPay() { this.STATE.payOverlayVisible = false; this.STATE.currentPage = 'ending-deceived'; this.render(); }
             cancelPay() {
                 this.STATE.payOverlayVisible = false;
-                this.STATE.chatHistory.push({ from:'system', content:'你觉得有点不对劲。收款方为什么是"XX文具店"，不是学校？', time:'' });
+                this.STATE.chatHistory.push({ from:'system', content:'你觉得有点不对劲。你记得老师的微信名不太一样', time:'' });
                 this.STATE.chatOptionsVisible = true;
                 this.STATE._currentOptions = [{ id:'check_profile', text:'[ 点开右上角 ··· 查看王老师的资料 ]', nextStageSpecial:'openProfile' }];
                 this.render();
@@ -1476,7 +1476,7 @@
                 const navTitle = this.STATE._currentSender || '聊天';
                 const showProfileBtn = this.STATE._currentChatType === 'private';
 
-                this.container.innerHTML = `<div class="page-chat"><div class="chat-nav"><button class="back-btn" id="btnExit">←</button><span class="chat-title"><span class="online-dot"></span>${navTitle}</span>${showProfileBtn?'<button class="profile-btn" id="btnProfile">···</button>':''}</div><div class="chat-messages" id="chatMsgs">${msgsHTML}</div><div class="chat-footer">${footerHTML}</div>${this.STATE.payOverlayVisible?'<div class="pay-overlay"><div class="pay-card"><div class="pay-icon">💳</div><div class="pay-receiver">收款方</div><div class="pay-receiver-name">XX文具店</div><div class="pay-amount">¥88.00</div><div class="pay-note">备注：资料费·XX班</div><button class="pay-btn-confirm" id="btnPayConfirm">确认支付</button><button class="pay-btn-cancel" id="btnPayCancel">取消</button></div></div>':''}${this.STATE.profileOverlayVisible?'<div class="profile-overlay"><div class="profile-card"><div class="profile-avatar">👩‍🏫</div><div class="profile-name">王老师</div><div class="profile-qq">QQ号：2847xxxx36</div><div class="profile-real-qq">你记得真正的王老师<br>QQ号是 <span class="highlight">139xxxx88</span><br>这个号码不对！</div><button class="btn-close-profile" id="btnCloseProfile">关闭</button></div></div>':''}</div>`;
+                this.container.innerHTML = `<div class="page-chat"><div class="chat-nav"><button class="back-btn" id="btnExit">←</button><span class="chat-title"><span class="online-dot"></span>${navTitle}</span>${showProfileBtn?'<button class="profile-btn" id="btnProfile">···</button>':''}</div><div class="chat-messages" id="chatMsgs">${msgsHTML}</div><div class="chat-footer">${footerHTML}</div>${this.STATE.payOverlayVisible?'<div class="pay-overlay"><div class="pay-card"><div class="pay-icon">💳</div><div class="pay-receiver">收款方</div><div class="pay-receiver-name">XX文具店</div><div class="pay-amount">¥88.00</div><div class="pay-note">备注：资料费·XX班</div><button class="pay-btn-confirm" id="btnPayConfirm">确认支付</button><button class="pay-btn-cancel" id="btnPayCancel">取消</button></div></div>':''}${this.STATE.profileOverlayVisible?'<div class="profile-overlay"><div class="profile-card"><div class="profile-avatar">👩‍🏫</div><div class="profile-name">王老师</div><div class="profile-qq">QQ号：2847xxxx36</div><div class="profile-real-wx">你记得真正的王老师<br>微信号是 <span class="highlight">139xxxx88</span><br>这个号码不对！</div><button class="btn-close-profile" id="btnCloseProfile">关闭</button></div></div>':''}</div>`;
 
                 document.getElementById('btnExit').addEventListener('click', () => this.navBack());
                 const self = this;
@@ -1514,7 +1514,8 @@ document.querySelectorAll('.chat-option-btn').forEach(btn => {
                 document.getElementById('btnRecap').addEventListener('click', () => { this.STATE.currentPage = 'recap'; this.render(); });
             }
             renderRecap() {
-                this.container.innerHTML = `<div class="page-recap"><div class="recap-officer"><div class="officer-avatar">👮‍♂️</div><div><div class="officer-name">明警官</div><div class="officer-msg">刚才那段对话，是一个已经在很多地方发生过的事情的重现。在现实世界里，最后那一下，钱真的会转走。</div></div></div><div class="recap-stats"><div class="stats-title">📊 真实案例数据</div><div class="stat-item">安徽合肥案：2024年9月，11名骗子潜入多个中学班级群，盗用班主任头像和昵称，以收取88元"新生资料费"为名发布收款二维码。尽管真班主任发现后立即提醒，仍有7名家长受骗，每人损失88元。</div><div class="stat-item">此类诈骗覆盖范围极广：一个骗子可同时潜入数十个班级群，利用晨间、午间家长忙碌时发作案。</div><div class="stat-item">警方提醒：班级群任何收费，务必先通过电话或当面与班主任本人核实。群内收款的，一律先确认账户名是否与学校一致。</div></div><div class="recap-reasons"><div class="recap-reason-card"><div class="reason-num">❶</div><div class="reason-quote">"每生88元，今天内完成。"</div><div class="reason-exp">88元是一个精心设计的低敏感金额——不多不少，多到需要操作一下，少到不值得专门打电话向老师确认。骗子深谙此心理：金额越小，人的警惕性越低。</div></div><div class="recap-reason-card"><div class="reason-num">❷</div><div class="reason-quote">"收到，已转。""已转，谢谢王老师通知。"</div><div class="reason-exp">这几个带头发"已转"的家长全是骗子的托。他们的作用就是制造从众压力——当后面的人看到前面有人说"已转"，大脑会自动默认"既然别人都交了，应该没问题"。</div></div><div class="recap-reason-card"><div class="reason-num">❸</div><div class="reason-quote">收款方显示：XX文具店</div><div class="reason-exp">骗子确实换上了班主任的头像和昵称，但收款账户是无法伪装的——钱最终流向的那个账户名字才是真正的破绽。可惜大多数人在扫码支付时，根本不会看一眼收款方是谁。</div></div></div><div class="recap-advice"><span class="advice-icon">💡</span>下次在群里看到收费通知，先做两件事：第一，抬头看一眼收款账户的名字——如果显示的是奇怪的名字而不是学校名，停止支付。第二，给老师打个电话。</div><button class="btn-got-it" id="btnHome">我知道了</button></div>`;
+                this.container.innerHTML = `<div class="page-recap"><div class="recap-officer"><div class="officer-avatar">👮‍♂️</div><div><div class="officer-name">明警官</div><div class="officer-msg">刚才那段对话，是一个已经在很多地方发生过的事情的重现。在现实世界里，最后那一下，钱真的会转走。</div></div></div><div class="recap-stats"><div class="stats-title">📊 真实案例数据</div><div class="stat-item">案例一：克隆头像昵称，群内收资料费（2026）
+北京某中学无进群验证，骗子混入后克隆班主任头像与昵称，深夜发通知：“课程配套资料费 210元 / 人，明日 18:00 前扫码缴纳，备注姓名 + 资料费”，附个人收款码，尽管真班主任发现后立即提醒，仍有7名家长受骗，每人损失210元。</div><div class="stat-item">此类诈骗覆盖范围极广：一个骗子可同时潜入数十个班级群，利用晨间、午间家长忙碌时发作案。</div><div class="stat-item">警方提醒：班级群任何收费，务必先核实。群内收款的，一律先确认账户名是否与学校一致。</div></div><div class="recap-reasons"><div class="recap-reason-card"><div class="reason-num">❶</div><div class="reason-quote">"每生88元，今天内完成。"</div><div class="reason-exp">88元是一个精心设计的低敏感金额——不多不少，多到需要操作一下，少到不值得专门打电话向老师确认。骗子深谙此心理：金额越小，人的警惕性越低。</div></div><div class="recap-reason-card"><div class="reason-num">❷</div><div class="reason-quote">"收到，已转。""已转，谢谢王老师通知。"</div><div class="reason-exp">这几个带头发"已转"的家长全是骗子的托。他们的作用就是制造从众压力——当后面的人看到前面有人说"已转"，大脑会自动默认"既然别人都交了，应该没问题"。</div></div><div class="recap-reason-card"><div class="reason-num">❸</div><div class="reason-quote">收款方显示：XX文具店</div><div class="reason-exp">骗子确实换上了班主任的头像和昵称，但收款账户是无法伪装的——钱最终流向的那个账户名字才是真正的破绽。可惜大多数人在扫码支付时，根本不会看一眼收款方是谁。</div></div></div><div class="recap-advice"><span class="advice-icon">💡</span>下次在群里看到收费通知，先做两件事：第一，抬头看一眼收款账户的名字——如果显示的是奇怪的名字而不是学校名，停止支付。第二，给老师打个电话。</div><button class="btn-got-it" id="btnHome">我知道了</button></div>`;
                 document.getElementById('btnHome').addEventListener('click', () => this.onComplete());
             }
         }
