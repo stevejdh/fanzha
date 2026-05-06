@@ -512,6 +512,61 @@
     </div>
 
     <script>
+    const SoundFX = (() => {
+        let ctx = null;
+        function getCtx() { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); return ctx; }
+        function play(freq, type, dur, vol) {
+            try {
+                const c = getCtx();
+                const osc = c.createOscillator();
+                const g = c.createGain();
+                osc.connect(g); g.connect(c.destination);
+                osc.frequency.value = freq; osc.type = type;
+                g.gain.setValueAtTime(vol, c.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+                osc.start(); osc.stop(c.currentTime + dur);
+            } catch(e) {}
+        }
+        function playSeq(freqs, type, gap, dur, vol) {
+            try {
+                const c = getCtx();
+                freqs.forEach((f, i) => {
+                    const osc = c.createOscillator();
+                    const g = c.createGain();
+                    osc.connect(g); g.connect(c.destination);
+                    osc.frequency.value = f; osc.type = type;
+                    const t = c.currentTime + i * gap;
+                    g.gain.setValueAtTime(0, t);
+                    g.gain.linearRampToValueAtTime(vol, t + 0.02);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+                    osc.start(t); osc.stop(t + dur);
+                });
+            } catch(e) {}
+        }
+        return {
+            click()   { play(1200, 'sine', 0.08, 0.15); },
+            success() { playSeq([523, 659, 784], 'sine', 0.1, 0.4, 0.2); },
+            error()   { play(300, 'sine', 0.4, 0.2); },
+            complete(){ playSeq([523, 659, 784, 1047], 'sine', 0.12, 0.35, 0.18); },
+            msg()     { play(900, 'sine', 0.12, 0.12); }
+        };
+    })();
+    document.addEventListener('click', (e) => {
+        const t = e.target;
+        if (t.closest('.chat-option-btn') || t.closest('.chat-option-btn-dark') || t.closest('.chat-option-btn-pink') || t.closest('.chat-option-btn-green') || t.closest('.chat-option-btn-purple')) {
+            SoundFX.click();
+        }
+    });
+    const _endObs = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+            for (const node of m.addedNodes) {
+                if (!node.querySelectorAll) continue;
+                if (node.querySelector('.page-ending.deceived') || node.querySelector('.page-ending-dark-deceived')) { SoundFX.error(); }
+                if (node.querySelector('.page-ending.identified') || node.querySelector('.page-ending-dark-identified')) { SoundFX.success(); }
+            }
+        }
+    });
+    _endObs.observe(document.body, { childList: true, subtree: true });
     (function() {
         const screenContent = document.getElementById('screenContent');
         const infoModal = document.getElementById('infoModal');
@@ -556,6 +611,7 @@
                     </div>
                 </div>`;
             document.getElementById('btnEnter').addEventListener('click', () => {
+                SoundFX.click();
                 renderHome();
             });
         }
@@ -588,11 +644,13 @@
         }
 
         function goHome() {
+            SoundFX.complete();
             if (currentLevel) { currentLevel.destroy(); currentLevel = null; }
             renderHome();
         }
 
             window.startLevel = function(key) {
+            SoundFX.click();
             switch(key) {
                 case 'level1': currentLevel = new Level1(screenContent, () => { markCompleted('level1'); goHome(); }, goHome); break;
                 case 'level2': currentLevel = new Level2(screenContent, () => { markCompleted('level2'); goHome(); }, goHome); break;
