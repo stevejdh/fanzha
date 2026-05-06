@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>音效预览</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
+    h1 { color: #333; }
+    .btn { padding: 15px 30px; margin: 10px; font-size: 18px; cursor: pointer; border: none; border-radius: 8px; }
+    .btn-click { background: #4A90D9; color: white; }
+    .btn-success { background: #52c41a; color: white; }
+    .btn-error { background: #ff4d4f; color: white; }
+    .btn-msg { background: #722ed1; color: white; }
+    .btn-complete { background: #faad14; color: white; }
+  </style>
+</head>
+<body>
+  <h1>🎵 音效预览 - 点击试听</h1>
+  <p>以下是 Web Audio API 生成的几种游戏音效：</p>
+  
+  <button class="btn btn-click" onclick="playClick()">🔘 按钮点击</button>
+  <button class="btn btn-success" onclick="playSuccess()">✅ 正确答案</button>
+  <button class="btn btn-error" onclick="playError()">❌ 错误答案</button>
+  <button class="btn btn-msg" onclick="playMessage()">💬 新消息</button>
+  <button class="btn btn-complete" onclick="playComplete()">🎉 关卡完成</button>
+
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // 按钮点击 - 短促的"滴"
+    function playClick() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = 800;
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    // 正确答案 - 上升的"叮~"
+    function playSuccess() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1047, audioCtx.currentTime + 0.15);
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    }
+
+    // 错误答案 - 下降的"嗡~"
+    function playError() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+      osc.type = 'sawtooth';
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    }
+
+    // 新消息 - 轻快的"嗖"
+    function playMessage() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.08);
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.15);
+    }
+
+    // 关卡完成 - 庆祝的"叮叮叮~"
+    function playComplete() {
+      [523, 659, 784].forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = freq;
+        osc.type = 'sine';
+        const startTime = audioCtx.currentTime + i * 0.15;
+        gain.gain.setValueAtTime(0.25, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
+        osc.start(startTime);
+        osc.stop(startTime + 0.3);
+      });
+    }
+  </script>
+</body>
+</html>
