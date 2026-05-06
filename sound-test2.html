@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>更多音效预览</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #1a1a2e; color: #eee; }
+    h1 { color: #fff; }
+    h2 { color: #aaa; margin-top: 30px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    .btn { padding: 12px 24px; margin: 8px; font-size: 16px; cursor: pointer; border: none; border-radius: 8px; margin-bottom: 15px; display: block; width: 200px; }
+    .ios { background: #007aff; color: white; }
+    .cartoon { background: #ff6b6b; color: white; }
+    .retro { background: #51cf66; color: white; }
+    .vocal { background: #cc5de8; color: white; }
+    .card { background: #222; border: 1px solid #333; border-radius: 12px; padding: 20px; margin: 15px 0; }
+    .note { color: #888; font-size: 14px; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>🎵 更多音效风格预览</h1>
+
+  <h2>🎀 风格1：柔和iOS风</h2>
+  <div class="card">
+    <button class="btn ios" onclick="playClickIOS()">🔘 按钮点击</button>
+    <button class="btn ios" onclick="playSuccessIOS()">✅ 成功</button>
+    <button class="btn ios" onclick="playErrorIOS()">❌ 失败</button>
+    <button class="btn ios" onclick="playCompleteIOS()">🎉 完成</button>
+    <div class="note">类似iPhone系统提示音，柔和好听</div>
+  </div>
+
+  <h2>🎪 风格2：卡通游戏风</h2>
+  <div class="card">
+    <button class="btn cartoon" onclick="playClickCartoon()">🔘 按钮点击</button>
+    <button class="btn cartoon" onclick="playSuccessCartoon()">✅ 成功</button>
+    <button class="btn cartoon" onclick="playErrorCartoon()">❌ 失败</button>
+    <button class="btn cartoon" onclick="playCompleteCartoon()">🎉 完成</button>
+    <div class="note">可爱的卡通游戏风格</div>
+  </div>
+
+  <h2>🕹️ 风格3：复古电子风</h2>
+  <div class="card">
+    <button class="btn retro" onclick="playClickRetro()">🔘 按钮点击</button>
+    <button class="btn retro" onclick="playSuccessRetro()">✅ 成功</button>
+    <button class="btn retro" onclick="playErrorRetro()">❌ 失败</button>
+    <button class="btn retro" onclick="playCompleteRetro()">🎉 完成</button>
+    <div class="note">8-bit复古游戏机风格</div>
+  </div>
+
+  <h2>🔊 风格4：语音助手风</h2>
+  <div class="card">
+    <button class="btn vocal" onclick="playClickVocal()">🔘 按钮点击</button>
+    <button class="btn vocal" onclick="playSuccessVocal()">✅ 成功</button>
+    <button class="btn vocal" onclick="playErrorVocal()">❌ 失败</button>
+    <button class="btn vocal" onclick="playCompleteVocal()">🎉 完成</button>
+    <div class="note">类似Siri/小爱同学的提示音</div>
+  </div>
+
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // ========== iOS 柔和风 ==========
+    function playClickIOS() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = 1200; osc.type = 'sine';
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+    }
+    function playSuccessIOS() {
+      [523, 659, 784].forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = f; osc.type = 'sine';
+        gain.gain.setValueAtTime(0, audioCtx.currentTime + i*0.1);
+        gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + i*0.1 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.1 + 0.4);
+        osc.start(audioCtx.currentTime + i*0.1);
+        osc.stop(audioCtx.currentTime + i*0.1 + 0.4);
+      });
+    }
+    function playErrorIOS() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = 300; osc.type = 'sine';
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+    }
+    function playCompleteIOS() {
+      [523, 659, 784, 1047].forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = f; osc.type = 'sine';
+        const t = audioCtx.currentTime + i*0.12;
+        gain.gain.setValueAtTime(0.18, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+        osc.start(t); osc.stop(t + 0.35);
+      });
+    }
+
+    // ========== 卡通风 ==========
+    function playClickCartoon() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+      osc.type = 'triangle';
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.12);
+    }
+    function playSuccessCartoon() {
+      [523, 784].forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = f; osc.type = 'triangle';
+        const t = audioCtx.currentTime + i*0.08;
+        gain.gain.setValueAtTime(0.25, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+        osc.start(t); osc.stop(t + 0.25);
+      });
+    }
+    function playErrorCartoon() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(200, audioCtx.currentTime + 0.1);
+      osc.type = 'triangle';
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime + 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+    }
+    function playCompleteCartoon() {
+      [523, 659, 784, 1047, 1319].forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = f; osc.type = 'triangle';
+        const t = audioCtx.currentTime + i*0.07;
+        gain.gain.setValueAtTime(0.22, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+        osc.start(t); osc.stop(t + 0.2);
+      });
+    }
+
+    // ========== 复古电子风 ==========
+    function playClickRetro() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = 440; osc.type = 'square';
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.06);
+    }
+    function playSuccessRetro() {
+      [262, 330, 392].forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = f; osc.type = 'square';
+        const t = audioCtx.currentTime + i*0.1;
+        gain.gain.setValueAtTime(0.1, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+        osc.start(t); osc.stop(t + 0.15);
+      });
+    }
+    function playErrorRetro() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = 110; osc.type = 'sawtooth';
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+    }
+    function playCompleteRetro() {
+      [262, 330, 392, 523, 392, 523].forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = f; osc.type = 'square';
+        const t = audioCtx.currentTime + i*0.08;
+        gain.gain.setValueAtTime(0.1, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+        osc.start(t); osc.stop(t + 0.12);
+      });
+    }
+
+    // ========== 语音助手风 ==========
+    function playClickVocal() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = 600; osc.type = 'sine';
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+    }
+    function playSuccessVocal() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.35);
+    }
+    function playErrorVocal() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.3);
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.35);
+    }
+    function playCompleteVocal() {
+      [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = f; osc.type = 'sine';
+        const t = audioCtx.currentTime + i*0.1;
+        gain.gain.setValueAtTime(0.15, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        osc.start(t); osc.stop(t + 0.3);
+      });
+    }
+  </script>
+</body>
+</html>
